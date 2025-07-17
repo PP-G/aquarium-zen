@@ -1,0 +1,549 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Aquarium Zen - Écran de veille</title>
+
+    <!-- PWA Meta tags pour iPhone -->
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+    <meta name="apple-mobile-web-app-title" content="Aquarium Zen">
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDE4MCAxODAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxODAiIGhlaWdodD0iMTgwIiBmaWxsPSIjMDAwIi8+CjxyZWN0IHg9IjQwIiB5PSI3MCIgd2lkdGg9IjYwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjRkZGIi8+CjxyZWN0IHg9IjIwIiB5PSI4MCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSIjRkZGIi8+CjxyZWN0IHg9IjgwIiB5PSI4NSIgd2lkdGg9IjgiIGhlaWdodD0iMTAiIGZpbGw9IiMwMDAiLz4KPC9zdmc+">
+
+    <!-- Manifest pour PWA -->
+    <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiQXF1YXJpdW0gWmVuIiwic2hvcnRfbmFtZSI6IkFxdWFyaXVtIiwiZGlzcGxheSI6ImZ1bGxzY3JlZW4iLCJvcmllbnRhdGlvbiI6InBvcnRyYWl0IiwidGhlbWVfY29sb3IiOiIjMDAwMDAwIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwMDAwMDAiLCJzdGFydF91cmwiOiIuLyIsImljb25zIjpbeyJzcmMiOiJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUIzYVdSMGFEMGlNVGd3SWlCb1pXbG5hSFE5SWpFNE1DSWdkbWxsZDFKdmVEMGlNQ0F3SURFNE1DQXhPREFpSUdacGJHdzlJbTV2Ym1VaUlIaHRiRzV6UFNKb2RIUndPaTh2ZDNkM0xuY3pMbTl5Wnk4eU1EQXdMM04yWnlJK0NqeHlaV04wSUhkcFpIUm9QU0l4T0RBaUlHaGxhV2RvZEQwaU1UZ3dJaUJtYVd4c1BTSWpNREF3SWk4K0NqeHlaV04wSUhnOUlqUXdJaUI1UFNJM01DSWdkMmxrZEdnOUlqWXdJaUJvWldsbmFIUTlJalF3SWlCbWFXeHNQU0lqUmtaR0lpOCtDanh5WldOMElIZzlJakl3SWlCNVBTSTRNQ0lnZDJsa2RHZzlJakl3SWlCb1pXbG5hSFE5SWpJd0lpQm1hV3hzUFNJalJrWkdJaTgrQ2p4eVpXTjBJSGc5SWpnd0lpQjVQU0k0TlNJZ2QybGtkR2c5SWpnaUlHaGxhV2RvZEQwaU1UQWlJR1pwYkd3OUlpTXdNREFpTHo0S1BDOXpkbWMrIiwidHlwZSI6ImltYWdlL3N2Zyt4bWwiLCJzaXplcyI6IjE4MHgxODAifV19">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            background-color: #000;
+            overflow: hidden;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            color: #fff;
+            touch-action: none;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        canvas {
+            display: block;
+            background-color: #000;
+            image-rendering: pixelated;
+            image-rendering: -moz-crisp-edges;
+            image-rendering: crisp-edges;
+            width: 100vw;
+            height: 100vh;
+        }
+
+        #controls {
+            position: absolute;
+            top: 20px;
+            left: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.5);
+            padding: 15px;
+            border-radius: 10px;
+            font-size: 14px;
+            z-index: 100;
+            transition: opacity 0.3s ease;
+        }
+
+        #controls.hidden {
+            opacity: 0;
+            pointer-events: none;
+        }
+
+        .control-row {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .control-row:last-child {
+            margin-bottom: 0;
+        }
+
+        button {
+            background: rgba(255, 255, 255, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+            color: #fff;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 12px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        button:active {
+            background: rgba(255, 255, 255, 0.4);
+            transform: scale(0.95);
+        }
+
+        #hideControlsBtn {
+            background: rgba(255, 255, 255, 0.1);
+            border: none;
+            color: #fff;
+            padding: 5px 10px;
+            border-radius: 15px;
+            font-size: 11px;
+            position: absolute;
+            top: 10px;
+            right: 10px;
+        }
+
+        #installPrompt {
+            position: absolute;
+            bottom: 20px;
+            left: 20px;
+            right: 20px;
+            background: rgba(0, 0, 0, 0.8);
+            padding: 15px;
+            border-radius: 10px;
+            text-align: center;
+            font-size: 13px;
+            z-index: 200;
+            display: none;
+        }
+
+        #installPrompt button {
+            margin-top: 10px;
+            background: #007AFF;
+            border: none;
+            padding: 10px 20px;
+        }
+
+        /* Animation de veille */
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .screensaver-mode {
+            animation: fadeIn 2s ease-in-out;
+        }
+    </style>
+</head>
+<body>
+    <canvas id="aquarium"></canvas>
+
+    <div id="controls">
+        <button id="hideControlsBtn">Masquer</button>
+        <div class="control-row">
+            <span>Poissons: <span id="fishCount">0</span></span>
+            <button id="addFishBtn">+ Poisson</button>
+        </div>
+        <div class="control-row">
+            <span>Mode veille</span>
+            <button id="screensaverBtn">Activer</button>
+        </div>
+        <div class="control-row">
+            <span>Réinitialiser</span>
+            <button id="resetBtn">Reset</button>
+        </div>
+    </div>
+
+    <div id="installPrompt">
+        <div>Installer Aquarium Zen sur votre iPhone</div>
+        <button id="installBtn">Installer</button>
+        <button id="dismissBtn" style="background: rgba(255,255,255,0.2); margin-left: 10px;">Plus tard</button>
+    </div>
+
+    <script>
+        // Variables globales
+        const canvas = document.getElementById('aquarium');
+        const ctx = canvas.getContext('2d');
+        const fishCountElement = document.getElementById('fishCount');
+        const controls = document.getElementById('controls');
+        const installPrompt = document.getElementById('installPrompt');
+
+        let screensaverMode = false;
+        let screensaverTimeout;
+        let lastInteraction = Date.now();
+
+        // Types de poissons exotiques
+        const FISH_TYPES = [
+            {
+                name: 'tropical',
+                bodyPattern: 'striped',
+                tailType: 'forked',
+                sizeRange: [25, 35]
+            },
+            {
+                name: 'angelfish',
+                bodyPattern: 'solid',
+                tailType: 'flowing',
+                sizeRange: [30, 45]
+            },
+            {
+                name: 'pufferfish',
+                bodyPattern: 'spotted',
+                tailType: 'small',
+                sizeRange: [20, 30]
+            }
+        ];
+
+        // Classe pour représenter un poisson
+        class Fish {
+            constructor(x, y, direction = 1) {
+                this.x = x;
+                this.y = y;
+                this.direction = direction;
+                this.speed = Math.random() * 0.5 + 0.2; // Encore plus lent sur mobile
+
+                this.type = FISH_TYPES[Math.floor(Math.random() * FISH_TYPES.length)];
+                this.size = Math.random() * (this.type.sizeRange[1] - this.type.sizeRange[0]) + this.type.sizeRange[0];
+
+                this.alive = true;
+                this.animationFrame = Math.random() * 100;
+                this.opacity = 1.0;
+                this.fadeSpeed = 0.01;
+            }
+
+            draw() {
+                if (!this.alive && this.opacity <= 0) return;
+
+                ctx.save();
+
+                if (!this.alive) {
+                    this.opacity -= this.fadeSpeed;
+                    ctx.globalAlpha = Math.max(0, this.opacity);
+                }
+
+                ctx.translate(this.x, this.y);
+
+                if (this.direction === -1) {
+                    ctx.scale(-1, 1);
+                }
+
+                const swimOffset = Math.sin(this.animationFrame * 0.03) * 1;
+                const breathingEffect = Math.sin(this.animationFrame * 0.02) * 0.3;
+                ctx.translate(0, swimOffset);
+                ctx.scale(1 + breathingEffect * 0.05, 1);
+
+                this.drawBody();
+                this.drawTail();
+                this.drawFins();
+                this.drawEye();
+
+                ctx.restore();
+            }
+
+            drawBody() {
+                ctx.fillStyle = '#fff';
+
+                if (this.type.bodyPattern === 'striped') {
+                    ctx.fillRect(-this.size/2, -this.size/4, this.size, this.size/2);
+                    ctx.fillStyle = '#000';
+                    for (let i = 0; i < 3; i++) {
+                        const stripeX = -this.size/2 + (i * this.size/4);
+                        ctx.fillRect(stripeX, -this.size/4, 2, this.size/2);
+                    }
+                } else if (this.type.bodyPattern === 'spotted') {
+                    ctx.fillRect(-this.size/2, -this.size/3, this.size, this.size * 0.66);
+                    ctx.fillStyle = '#000';
+                    ctx.fillRect(-this.size/4, -this.size/6, 2, 2);
+                    ctx.fillRect(this.size/6, -this.size/8, 2, 2);
+                    ctx.fillRect(-this.size/6, this.size/8, 2, 2);
+                } else {
+                    ctx.fillRect(-this.size/2, -this.size/3, this.size, this.size * 0.66);
+                }
+            }
+
+            drawTail() {
+                ctx.fillStyle = '#fff';
+
+                if (this.type.tailType === 'forked') {
+                    ctx.fillRect(-this.size/2 - 10, -this.size/8, 6, 2);
+                    ctx.fillRect(-this.size/2 - 10, this.size/8, 6, 2);
+                    ctx.fillRect(-this.size/2 - 6, -this.size/10, 3, this.size/5);
+                } else if (this.type.tailType === 'flowing') {
+                    ctx.fillRect(-this.size/2 - 12, -this.size/4, 10, this.size/2);
+                    ctx.fillRect(-this.size/2 - 16, -this.size/6, 6, this.size/3);
+                } else {
+                    ctx.fillRect(-this.size/2 - 6, -this.size/8, 4, this.size/4);
+                }
+            }
+
+            drawFins() {
+                ctx.fillStyle = '#fff';
+
+                if (this.type.name === 'angelfish') {
+                    ctx.fillRect(-this.size/4, -this.size/2, this.size/2, 4);
+                    ctx.fillRect(-this.size/4, this.size/2 - 4, this.size/2, 4);
+                } else {
+                    ctx.fillRect(-this.size/6, -this.size/3, this.size/3, 2);
+                    ctx.fillRect(-this.size/6, this.size/3 - 2, this.size/3, 2);
+                }
+            }
+
+            drawEye() {
+                ctx.fillStyle = '#fff';
+                ctx.fillRect(this.size/4, -this.size/8, 4, 4);
+                ctx.fillStyle = '#000';
+                ctx.fillRect(this.size/4 + 1, -this.size/8 + 1, 2, 2);
+            }
+
+            update() {
+                if (!this.alive && this.opacity <= 0) return;
+
+                this.animationFrame += 0.3;
+                this.x += this.speed * this.direction;
+
+                if (this.x > canvas.width + this.size) {
+                    this.x = -this.size;
+                } else if (this.x < -this.size) {
+                    this.x = canvas.width + this.size;
+                }
+
+                this.y += Math.sin(this.animationFrame * 0.015) * 0.15;
+
+                if (this.y < this.size/2) this.y = this.size/2;
+                if (this.y > canvas.height - this.size/2) this.y = canvas.height - this.size/2;
+            }
+
+            checkCollision(otherFish) {
+                if (!this.alive || !otherFish.alive || this === otherFish) return false;
+
+                const dx = this.x - otherFish.x;
+                const dy = this.y - otherFish.y;
+                const distance = Math.sqrt(dx * dx + dy * dy);
+                const minDistance = (this.size + otherFish.size) / 3;
+
+                return distance < minDistance;
+            }
+
+            interact(otherFish) {
+                if (!this.checkCollision(otherFish)) return;
+
+                if (this.size > otherFish.size * 1.4) {
+                    this.eatFish(otherFish);
+                } else if (otherFish.size > this.size * 1.4) {
+                    otherFish.eatFish(this);
+                } else {
+                    this.avoidFish(otherFish);
+                }
+            }
+
+            eatFish(prey) {
+                if (!prey.alive) return;
+
+                prey.alive = false;
+                this.size += prey.size * 0.08;
+                this.speed *= 0.8;
+
+                setTimeout(() => {
+                    this.speed = Math.random() * 0.5 + 0.2;
+                }, 3000);
+            }
+
+            avoidFish(otherFish) {
+                const dx = this.x - otherFish.x;
+                const dy = this.y - otherFish.y;
+
+                this.y += dy > 0 ? 1.5 : -1.5;
+
+                if (Math.random() < 0.05) {
+                    this.speed *= 0.95;
+                    setTimeout(() => {
+                        this.direction *= -1;
+                        this.speed = Math.random() * 0.5 + 0.2;
+                    }, 1000);
+                }
+            }
+        }
+
+        let fishes = [];
+
+        // Ajuster la taille du canvas
+        function resizeCanvas() {
+            const dpr = window.devicePixelRatio || 1;
+            const rect = canvas.getBoundingClientRect();
+
+            canvas.width = rect.width * dpr;
+            canvas.height = rect.height * dpr;
+
+            ctx.scale(dpr, dpr);
+            canvas.style.width = rect.width + 'px';
+            canvas.style.height = rect.height + 'px';
+        }
+
+        function addFish() {
+            const x = Math.random() * canvas.width;
+            const y = Math.random() * (canvas.height - 100) + 50;
+            const direction = Math.random() > 0.5 ? 1 : -1;
+            fishes.push(new Fish(x, y, direction));
+            updateFishCount();
+        }
+
+        function addRandomFish() {
+            const side = Math.random() > 0.5 ? 'left' : 'right';
+            const x = side === 'left' ? -50 : canvas.width + 50;
+            const y = Math.random() * (canvas.height - 100) + 50;
+            const direction = side === 'left' ? 1 : -1;
+
+            fishes.push(new Fish(x, y, direction));
+            updateFishCount();
+        }
+
+        function updateFishCount() {
+            fishCountElement.textContent = fishes.filter(fish => fish.alive).length;
+        }
+
+        function animate() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+            for (let i = 0; i < fishes.length; i++) {
+                for (let j = i + 1; j < fishes.length; j++) {
+                    fishes[i].interact(fishes[j]);
+                }
+            }
+
+            fishes.forEach(fish => {
+                fish.update();
+                if (fish.alive || fish.opacity > 0) {
+                    fish.draw();
+                }
+            });
+
+            cleanupDeadFish();
+
+            // En mode veille, ajouter des poissons automatiquement
+            if (screensaverMode && Math.random() < 0.003 && fishes.filter(f => f.alive).length < 8) {
+                addRandomFish();
+            }
+
+            // Activer le mode veille automatiquement après 30 secondes
+            if (!screensaverMode && Date.now() - lastInteraction > 30000) {
+                activateScreensaver();
+            }
+
+            requestAnimationFrame(animate);
+        }
+
+        function cleanupDeadFish() {
+            fishes = fishes.filter(fish => {
+                if (!fish.alive) {
+                    return fish.opacity > 0;
+                }
+                return true;
+            });
+        }
+
+        function activateScreensaver() {
+            screensaverMode = true;
+            controls.classList.add('hidden');
+            document.body.classList.add('screensaver-mode');
+
+            // Ajouter quelques poissons pour la veille
+            for (let i = 0; i < 3; i++) {
+                setTimeout(() => addRandomFish(), i * 2000);
+            }
+        }
+
+        function deactivateScreensaver() {
+            screensaverMode = false;
+            controls.classList.remove('hidden');
+            document.body.classList.remove('screensaver-mode');
+            lastInteraction = Date.now();
+        }
+
+        function resetAquarium() {
+            fishes = [];
+            updateFishCount();
+            for (let i = 0; i < 4; i++) {
+                addRandomFish();
+            }
+        }
+
+        // Gestion PWA
+        let deferredPrompt;
+
+        window.addEventListener('beforeinstallprompt', (e) => {
+            e.preventDefault();
+            deferredPrompt = e;
+            installPrompt.style.display = 'block';
+        });
+
+        // Événements
+        window.addEventListener('resize', resizeCanvas);
+
+        canvas.addEventListener('touchstart', (e) => {
+            e.preventDefault();
+            if (screensaverMode) {
+                deactivateScreensaver();
+            } else {
+                addFish();
+                lastInteraction = Date.now();
+            }
+        });
+
+        canvas.addEventListener('click', (e) => {
+            if (screensaverMode) {
+                deactivateScreensaver();
+            } else {
+                addFish();
+                lastInteraction = Date.now();
+            }
+        });
+
+        document.getElementById('addFishBtn').addEventListener('click', () => {
+            addFish();
+            lastInteraction = Date.now();
+        });
+
+        document.getElementById('screensaverBtn').addEventListener('click', () => {
+            if (screensaverMode) {
+                deactivateScreensaver();
+            } else {
+                activateScreensaver();
+            }
+        });
+
+        document.getElementById('resetBtn').addEventListener('click', () => {
+            resetAquarium();
+            lastInteraction = Date.now();
+        });
+
+        document.getElementById('hideControlsBtn').addEventListener('click', () => {
+            controls.classList.add('hidden');
+            setTimeout(() => controls.classList.remove('hidden'), 5000);
+        });
+
+        document.getElementById('installBtn').addEventListener('click', () => {
+            if (deferredPrompt) {
+                deferredPrompt.prompt();
+                deferredPrompt.userChoice.then((choiceResult) => {
+                    if (choiceResult.outcome === 'accepted') {
+                        console.log('PWA installée');
+                    }
+                    deferredPrompt = null;
+                    installPrompt.style.display = 'none';
+                });
+            }
+        });
+
+        document.getElementById('dismissBtn').addEventListener('click', () => {
+            installPrompt.style.display = 'none';
+        });
+
+        // Empêcher le zoom sur iOS
+        document.addEventListener('touchmove', (e) => {
+            if (e.scale !== 1) {
+                e.preventDefault();
+            }
+        }, { passive: false });
+
+        // Initialisation
+        resizeCanvas();
+        resetAquarium();
+        animate();
+    </script>
+</body>
+</html>
