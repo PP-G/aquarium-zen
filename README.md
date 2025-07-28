@@ -1,21 +1,20 @@
-# Aquarium Zen - Écran de veille rétro
+# Aquarium Zen - Retro screensaver
+A relaxing screensaver with pixelized fishes with a style from the 80s.
 
-Un écran de veille relaxant avec des poissons pixelisés style années 80.
-
-## Fonctionnalités
-- Poissons exotiques pixelisés (tropical, poisson-ange, poisson-globe)
-- Animation fluide et relaxante
-- Interactions naturelles (prédation, évitement)
-- Mode veille automatique
-- Compatible ordinateur et iPhone (PWA)
+## Features
+- Exotic pixelized fishes (tropical, angelfish, globefish)
+- Fluid and relaxing animation
+- Natural interactions (predation, avoidance)
+- Automatic screensaver mode
+- Compatible with computers and iPhones (PWA)
 
 ## Installation
-1. Ouvre `index.html` dans ton navigateur
-2. Pour iPhone : utilise Safari et "Ajouter à l'écran d'accueil"
+1. Open `index.html` in your browser
+2. For iPhone : use Safari and "Add to the home screen"
 
-## Contrôles
-- Clic/toucher : Ajouter un poisson
-- Mode veille : Activation automatique après 30 secondes
-- Reset : Recommencer l'aquarium
+## Commands
+- Click/touch : Add a fish
+- Sleep mode : Automatic activation after 30 seconds
+- Reset : Reset the aquarium
 
-Créé avec HTML5 Canvas et JavaScript vanilla.
+Created with HTML5 Canvas and Javascript vanilla.
