@@ -5,13 +5,13 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
     <title>Aquarium Zen - Écran de veille</title>
 
-    <!-- PWA Meta tags pour iPhone -->
+    <!-- PWA Meta tags for iPhone -->
     <meta name="apple-mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black">
     <meta name="apple-mobile-web-app-title" content="Aquarium Zen">
     <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTgwIiBoZWlnaHQ9IjE4MCIgdmlld0JveD0iMCAwIDE4MCAxODAiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxODAiIGhlaWdodD0iMTgwIiBmaWxsPSIjMDAwIi8+CjxyZWN0IHg9IjQwIiB5PSI3MCIgd2lkdGg9IjYwIiBoZWlnaHQ9IjQwIiBmaWxsPSIjRkZGIi8+CjxyZWN0IHg9IjIwIiB5PSI4MCIgd2lkdGg9IjIwIiBoZWlnaHQ9IjIwIiBmaWxsPSIjRkZGIi8+CjxyZWN0IHg9IjgwIiB5PSI4NSIgd2lkdGg9IjgiIGhlaWdodD0iMTAiIGZpbGw9IiMwMDAiLz4KPC9zdmc+">
 
-    <!-- Manifest pour PWA -->
+    <!-- Manifest for PWA -->
     <link rel="manifest" href="data:application/json;base64,eyJuYW1lIjoiQXF1YXJpdW0gWmVuIiwic2hvcnRfbmFtZSI6IkFxdWFyaXVtIiwiZGlzcGxheSI6ImZ1bGxzY3JlZW4iLCJvcmllbnRhdGlvbiI6InBvcnRyYWl0IiwidGhlbWVfY29sb3IiOiIjMDAwMDAwIiwiYmFja2dyb3VuZF9jb2xvciI6IiMwMDAwMDAiLCJzdGFydF91cmwiOiIuLyIsImljb25zIjpbeyJzcmMiOiJkYXRhOmltYWdlL3N2Zyt4bWw7YmFzZTY0LFBITjJaeUIzYVdSMGFEMGlNVGd3SWlCb1pXbG5hSFE5SWpFNE1DSWdkbWxsZDFKdmVEMGlNQ0F3SURFNE1DQXhPREFpSUdacGJHdzlJbTV2Ym1VaUlIaHRiRzV6UFNKb2RIUndPaTh2ZDNkM0xuY3pMbTl5Wnk4eU1EQXdMM04yWnlJK0NqeHlaV04wSUhkcFpIUm9QU0l4T0RBaUlHaGxhV2RvZEQwaU1UZ3dJaUJtYVd4c1BTSWpNREF3SWk4K0NqeHlaV04wSUhnOUlqUXdJaUI1UFNJM01DSWdkMmxrZEdnOUlqWXdJaUJvWldsbmFIUTlJalF3SWlCbWFXeHNQU0lqUmtaR0lpOCtDanh5WldOMElIZzlJakl3SWlCNVBTSTRNQ0lnZDJsa2RHZzlJakl3SWlCb1pXbG5hSFE5SWpJd0lpQm1hV3hzUFNJalJrWkdJaTgrQ2p4eVpXTjBJSGc5SWpnd0lpQjVQU0k0TlNJZ2QybGtkR2c5SWpnaUlHaGxhV2RvZEQwaU1UQWlJR1pwYkd3OUlpTXdNREFpTHo0S1BDOXpkbWMrIiwidHlwZSI6ImltYWdlL3N2Zyt4bWwiLCJzaXplcyI6IjE4MHgxODAifV19">
 
     <style>
@@ -119,7 +119,7 @@
             padding: 10px 20px;
         }
 
-        /* Animation de veille */
+        /* Screensaver animation */
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
@@ -156,7 +156,7 @@
     </div>
 
     <script>
-        // Variables globales
+        // Global variables
         const canvas = document.getElementById('aquarium');
         const ctx = canvas.getContext('2d');
         const fishCountElement = document.getElementById('fishCount');
@@ -167,7 +167,7 @@
         let screensaverTimeout;
         let lastInteraction = Date.now();
 
-        // Types de poissons exotiques
+        // Types of exotic fish
         const FISH_TYPES = [
             {
                 name: 'tropical',
@@ -189,7 +189,7 @@
             }
         ];
 
-        // Classe pour représenter un poisson
+        // Class to represent a fish
         class Fish {
             constructor(x, y, direction = 1) {
                 this.x = x;
@@ -361,7 +361,7 @@
 
         let fishes = [];
 
-        // Ajuster la taille du canvas
+        // Adjust the size of the canvas based on device pixel ratio
         function resizeCanvas() {
             const dpr = window.devicePixelRatio || 1;
             const rect = canvas.getBoundingClientRect();
@@ -415,12 +415,12 @@
 
             cleanupDeadFish();
 
-            // En mode veille, ajouter des poissons automatiquement
+            // In screensaver mode, add fish automatically
             if (screensaverMode && Math.random() < 0.003 && fishes.filter(f => f.alive).length < 8) {
                 addRandomFish();
             }
 
-            // Activer le mode veille automatiquement après 30 secondes
+            // Activate screensaver if no interaction for 30 seconds
             if (!screensaverMode && Date.now() - lastInteraction > 30000) {
                 activateScreensaver();
             }
@@ -442,7 +442,7 @@
             controls.classList.add('hidden');
             document.body.classList.add('screensaver-mode');
 
-            // Ajouter quelques poissons pour la veille
+            // Add initial fish for screensaver
             for (let i = 0; i < 3; i++) {
                 setTimeout(() => addRandomFish(), i * 2000);
             }
@@ -463,7 +463,7 @@
             }
         }
 
-        // Gestion PWA
+        // PWA management
         let deferredPrompt;
 
         window.addEventListener('beforeinstallprompt', (e) => {
@@ -472,7 +472,7 @@
             installPrompt.style.display = 'block';
         });
 
-        // Événements
+        // Events
         window.addEventListener('resize', resizeCanvas);
 
         canvas.addEventListener('touchstart', (e) => {
@@ -534,14 +534,14 @@
             installPrompt.style.display = 'none';
         });
 
-        // Empêcher le zoom sur iOS
+        // Prevent zoom on iOS
         document.addEventListener('touchmove', (e) => {
             if (e.scale !== 1) {
                 e.preventDefault();
             }
         }, { passive: false });
 
-        // Initialisation
+        // Initializing
         resizeCanvas();
         resetAquarium();
         animate();
