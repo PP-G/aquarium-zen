@@ -134,17 +134,17 @@
     <canvas id="aquarium"></canvas>
 
     <div id="controls">
-        <button id="hideControlsBtn">Masquer</button>
+        <button id="hideControlsBtn">Hide</button>
         <div class="control-row">
-            <span>Poissons: <span id="fishCount">0</span></span>
-            <button id="addFishBtn">+ Poisson</button>
+            <span>Fish: <span id="fishCount">0</span></span>
+            <button id="addFishBtn">+ Fish</button>
         </div>
         <div class="control-row">
-            <span>Mode veille</span>
-            <button id="screensaverBtn">Activer</button>
+            <span>Screensaver mode</span>
+            <button id="screensaverBtn">Activate</button>
         </div>
         <div class="control-row">
-            <span>Réinitialiser</span>
+            <span>Reset</span>
             <button id="resetBtn">Reset</button>
         </div>
     </div>
@@ -406,6 +406,7 @@
             }
 
             fishes.forEach(fish => {
+              console.log(`Fish at (${fish.x.toFixed(2)}, ${fish.y.toFixed(2)}) ${fish.opacity} ${canvas.width},${canvas.height} - Size: ${fish.size.toFixed(2)} - Alive: ${fish.alive}`);
                 fish.update();
                 if (fish.alive || fish.opacity > 0) {
                     fish.draw();
