@@ -406,7 +406,6 @@
             }
 
             fishes.forEach(fish => {
-              console.log(`Fish at (${fish.x.toFixed(2)}, ${fish.y.toFixed(2)}) ${fish.opacity} ${canvas.width},${canvas.height} - Size: ${fish.size.toFixed(2)} - Alive: ${fish.alive}`);
                 fish.update();
                 if (fish.alive || fish.opacity > 0) {
                     fish.draw();
