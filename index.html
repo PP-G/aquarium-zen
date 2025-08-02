@@ -196,7 +196,7 @@
                 this.x = x;
                 this.y = y;
                 this.direction = direction;
-                this.speed = Math.random() * 0.5 + 0.2; // Encore plus lent sur mobile
+                this.speed = Math.random() * 0.5 + 0.2; // Even slower on mobile
 
                 this.type = FISH_TYPES[Math.floor(Math.random() * FISH_TYPES.length)];
                 this.size = Math.random() * (this.type.sizeRange[1] - this.type.sizeRange[0]) + this.type.sizeRange[0];
@@ -522,7 +522,7 @@
                 deferredPrompt.prompt();
                 deferredPrompt.userChoice.then((choiceResult) => {
                     if (choiceResult.outcome === 'accepted') {
-                        console.log('PWA installée');
+                        console.log('PWA installed');
                     }
                     deferredPrompt = null;
                     installPrompt.style.display = 'none';
